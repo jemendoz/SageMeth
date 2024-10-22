@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
 def tridiagonal(A):
     n = A.nrows()
     D = matrix.diagonal(A.diagonal())
@@ -59,20 +65,29 @@ def pivotaje(A,etapa):
 
 
 def radio_espectral(M):
+    """
+    Radio espectral
+    M: Matriz cuadrada
+    
+    Devuelve: radio espectral de M
+    """
+    if not M.is_square():
+        raise ValueError("M debe ser cuadrada")
     return max([abs(x) for x in M.eigenvalues()])
 
 
 # In[6]:
 
 
-def converge(A):
-    return radio_espectral(A) < 1
-
-
-# In[7]:
-
-
 def metodo_del_remonte(A, b, espacio=RR):
+    """
+    Metodo del remonte:
+    A: matriz triangular superior
+    b: termino independiente
+    espacio: espacio del vector solucion, por defecto R
+    
+    Te devuelve el vector solucion de un sistema lineal con matriz del sistema traingular superior.
+    """
     if not A.is_square():
         raise ValueError("La matriz A tiene que ser cuadrada")
     
@@ -88,10 +103,17 @@ def metodo_del_remonte(A, b, espacio=RR):
     return u
 
 
-# In[8]:
+# In[7]:
 
 
 def eliminacion_gaussiana(A,b):
+    """
+    Eliminacion Gaussiana:
+    A: matriz cualquiera
+    b: termino independiente
+    
+    Devuelve: Matriz escalonada y el vector con sus respectivas operaciones aplicadas
+    """
     n,m = A.dimensions()
     for paso in range(0,n-1):
         pivotaje(A,paso)
@@ -102,10 +124,17 @@ def eliminacion_gaussiana(A,b):
     return A,b
 
 
-# In[9]:
+# In[8]:
 
 
 def fact_doolittle(A,espacio=RR):
+    """
+    Factorizacion de Doolittle
+    A: Matriz a factorizar, cuadrada
+    espacio: Espacio de las matrices resultantes, por defecto, QQ
+    
+    Devuelve: Matrices P,L,U tal que P*A = L*U, L trian. inf., U trian. sup. y diag(L) = {1,...,1}
+    """
     if not A.is_square():
         raise ValueError("A debe ser cuadrada")
         
@@ -132,10 +161,17 @@ def fact_doolittle(A,espacio=RR):
     return P,L,U
 
 
-# In[10]:
+# In[9]:
 
 
 def fact_crout(A,espacio=RR):
+    """
+    Factorizacion de Crout
+    A: Matriz a factorizar, cuadrada
+    espacio: Espacio de las matrices resultantes, por defecto, QQ
+    
+    Devuelve: Matrices P,L,U tal que P*A = L*U, L trian. inf., U trian. sup. y diag(U) = {1,...,1}
+    """
     if not A.is_square():
         raise ValueError("A debe ser cuadrada")
         
@@ -154,10 +190,17 @@ def fact_crout(A,espacio=RR):
     return P,Lp,Up
 
 
-# In[11]:
+# In[10]:
 
 
 def fact_cholesky(A,espacio=RR):
+    """
+    Factorizacion de Cholesky
+    A: Matriz a factorizar, cuadrada, hermitiana y definida positiva
+    espacio: Espacio de las matrices resultantes, por defecto, QQ
+    
+    Devuelve: Matrices P,B,B^T tal que P*A = B*B^T, con B trian. inf.
+    """
     if not A.is_square():
         raise ValueError("A debe ser cuadrada")
         
@@ -175,10 +218,17 @@ def fact_cholesky(A,espacio=RR):
     return P,B,B.T
 
 
-# In[12]:
+# In[11]:
 
 
-def separacion_DEF(A:sage.matrix,espacio=QQ):
+def separacion_DEF(A,espacio=QQ):
+    """
+    Separacion DEF
+    A: Matriz cuadrada para separar
+    espacio: Espacio de las matrices resultantes, por defecto, QQ
+    
+    Devuelve: Matrices D,E y F tal que A = D-E-F, con D diag., E trian. inf., F trian. sup.
+    """
     if not A.is_square():
         raise ValueError("La matriz no es cuadrada")
         
@@ -202,18 +252,34 @@ def separacion_DEF(A:sage.matrix,espacio=QQ):
     
 
 
-# In[13]:
+# In[12]:
 
 
 def jacobi_matriz(A,espacio=QQ):
+    """
+    Matriz de Jacobi
+    A: Matriz cuadrada
+    
+    Devuelve: matriz asociada al metodo de Jacobi
+    """
     D,E,F = separacion_DEF(A,espacio)
     return D.inverse() * (E+F)
 
 
-# In[14]:
+# In[13]:
 
 
 def jacobi_iter(A,b,ini,iters,espacio=QQ):
+    """
+    Metodo recursivo de Jacobi
+    A: Matriz cuadrada del sistema lineal
+    b: Vector de terminos independientes del sistema
+    ini: Primer vector de aproximacion para el metodo
+    iters: Numero de iteraciones a realizar
+    espacio: Espacio del vector aproximacion resultante, por defecto, QQ
+    
+    Devuelve: Vector aproximacion segun el metodo
+    """
     if not A.is_square():
         raise ValueError("La matriz debe ser cuadrada")
     
@@ -242,18 +308,34 @@ def jacobi_iter(A,b,ini,iters,espacio=QQ):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[15]:
+# In[14]:
 
 
 def gauss_seidel_matriz(A,espacio=QQ):
+    """
+    Matriz de Gauss-Seidel
+    A: Matriz cuadrada
+    
+    Devuelve: matriz asociada al metodo de Gauss-Seidel
+    """
     D,E,F = separacion_DEF(A,espacio)
     return (D-E).inverse() * F
 
 
-# In[16]:
+# In[15]:
 
 
 def gauss_seidel_iter(A,b,ini,iters,espacio=QQ):
+    """
+    Metodo recursivo de Gauss-Seidel
+    A: Matriz cuadrada del sistema lineal
+    b: Vector de terminos independientes del sistema
+    ini: Primer vector de aproximacion para el metodo
+    iters: Numero de iteraciones a realizar
+    espacio: Espacio del vector aproximacion resultante, por defecto, QQ
+    
+    Devuelve: vector aproximacion segun el metodo
+    """
     if not A.is_square():
         raise ValueError("La matriz debe ser cuadrada")
     
@@ -282,18 +364,36 @@ def gauss_seidel_iter(A,b,ini,iters,espacio=QQ):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[22]:
+# In[16]:
 
 
 def sor_matriz(A,w,espacio=QQ):
+    """
+    Matriz de relajacion
+    A: Matriz cuadrada
+    w: Parametro de relajacion
+    
+    Devuelve: matriz asociada al metodo de relajacion, con el parametro indicado
+    """
     D,E,F = separacion_DEF(A,espacio)
     return (w^(-1)*D - E).inverse() * (F + (w^(-1) - 1)*D)
 
 
-# In[23]:
+# In[17]:
 
 
 def sor_iter(A,b,ini,iters,w,espacio=QQ):
+    """
+    Metodo recursivo de relajacion
+    A: Matriz cuadrada del sistema lineal
+    b: Vector de terminos independientes del sistema
+    ini: Primer vector de aproximacion para el metodo
+    iters: Numero de iteraciones a realizar
+    w: Parametro de relajacion
+    espacio: Espacio del vector aproximacion resultante, por defecto, QQ
+    
+    Devuelve: vector aproximacion segun el metodo
+    """
     if not A.is_square():
         raise ValueError("La matriz debe ser cuadrada")
         
@@ -325,10 +425,16 @@ def sor_iter(A,b,ini,iters,w,espacio=QQ):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[32]:
+# In[18]:
 
 
 def parametro_relajacion_optimo(A):
+    """
+    Parametro optimo para el metodo de relajacion SOR
+    A: Matriz cuadrada, hermitiana, y definida positiva tridiagonal
+    
+    Devuelve: Parametro de relajacion optimo para la matriz A
+    """
     if not A.is_square():
         raise ValueError("A debe ser cuadrada")
         
@@ -344,10 +450,39 @@ def parametro_relajacion_optimo(A):
     return 2 / (1 + sqrt(1 - radio_espectral(gauss_seidel_matriz(A))))
 
 
-# In[17]:
+# In[19]:
+
+
+def acotacion_error_matrices_iter(B,TOL,aprox0,aprox1):
+    """
+    Acotacion del error en metodos iterativos para stms. lin.
+    B: Matriz del metodo iterativo (J en Jacobi, L1 en G-S,...)
+    TOL: Tolerancia exigida
+    aprox0: Valor inicial de la aproximacion en el metodo
+    aprox1: Primer valor obtenido en la iteracion del metodo
+    
+    Devuelve: Numero de iteraciones necesarias para obtener la tolerancia exigida
+    """
+    bn = B.norm(Infinity)
+    un = (aprox1 - aprox0).norm(Infinity)
+    k = 0
+    while bn^k / (1 - bn) * un >= 10^(-TOL):
+        k += 1
+    return k
+
+
+# In[20]:
 
 
 def metodo_biseccion(f,a,b,prec=4):
+    """
+    Metodo de biseccion:
+    f: Funcion continua
+    a,b: Extremos del intervalo que contiene una raiz
+    prec: Precision en digitos decimales del intervalo resultante
+    
+    Devuelve: Intervalo que contiene una raiz, con una apertura menor que 10^-prec
+    """
     if f(a)*f(b) >= 0:
         raise ValueError("Los extremos de f no tienen distinto signo")
         
@@ -363,3 +498,4 @@ def metodo_biseccion(f,a,b,prec=4):
             n.append(n[-1])
     
     return (N(m[-1]),N(n[-1]))
+
