@@ -488,7 +488,7 @@ def metodo_biseccion(f,a,b,prec=4):
         
     m = [a]
     n = [b]
-    while (n[-1] - m[-1] > 10**(-prec)):
+    while abs(n[-1] - m[-1]) > 10**(-prec):
         medio = (m[-1]+n[-1])/2
         if f(m[-1]) * f(medio) < 0:
             m.append(m[-1])
@@ -498,4 +498,94 @@ def metodo_biseccion(f,a,b,prec=4):
             n.append(n[-1])
     
     return (N(m[-1]),N(n[-1]))
+
+
+# In[21]:
+
+
+def metodo_regla_falsa(f,a,b,prec=3):
+    """
+    Metodo de la regla falsa:
+    f: Funcion continua
+    a,b: Extremos del intervalo que contiene una raiz
+    prec: Precision en digitos decimales del intervalo resultante
+    
+    Devuelve: Intervalo que contiene una raiz, con una apertura menor que 10^-prec
+    """
+    if f(a)*f(b) >= 0:
+        raise ValueError("Los extremos a y b deben tener distinto signo")
+    
+    while abs(b - a) > 10^(-prec):
+        c = (f(b)*a - f(a)*b)/(f(b) - f(a))
+        if f(a) * f(c) < 0:
+            b = c
+        else:
+            a = c
+    return N(a),N(b)
+
+
+# In[29]:
+
+
+def metodo_punto_fijo(f,ini,iters):
+    """
+    Metodo del punto fijo
+    f: funcion de la que se desea el punto fijo
+    ini: valor inicial
+    iters: cantidad de iteraciones
+    
+    Devuelve: aproximaciones iterativas del punto fijo
+    """
+    for k in range(iters):
+        ini = N(f(ini))
+        print(f"Ciclo {k}: x = {ini}")
+
+
+# In[54]:
+
+
+def metodo_newton(f,ini,iters):
+    """
+    Metodo de Newton
+    f: funcion para buscar una raiz
+    
+    Devuelve: aproximaciones mediante el metodo de Newton
+    """ 
+    
+    N(x) = x - (f(x)/derivative(f,x))
+    metodo_punto_fijo(N,ini,iters)
+
+
+# In[55]:
+
+
+def ayuda():
+    """
+    Funcion de ayuda
+    Para que cojones miras la ayuda de la funcion de ayuda
+    """
+    print("""
+    Para obtener informacion sobre una funcion, usa help(<funcion>)
+    Funciones implementadas:
+    radio_espectral(M)
+    metodo_del_remonte(A, b, espacio=RR)
+    eliminacion_gaussiana(A,b)
+    fact_doolittle(A,espacio=RR)
+    fact_crout(A,espacio=RR)
+    fact_cholesky(A,espacio=RR)
+    separacion_DEF(A,espacio=QQ)
+    jacobi_matriz(A,espacio=QQ)
+    jacobi_iter(A,b,ini,iters,espacio=QQ)
+    gauss_seidel_matriz(A,espacio=QQ)
+    gauss_seidel_iter(A,b,ini,iters,espacio=QQ)
+    sor_matriz(A,w,espacio=QQ)
+    sor_iter(A,b,ini,iters,w,espacio=QQ)
+    parametro_relajacion_optimo(A)
+    acotacion_error_matrices_iter(B,TOL,aprox0,aprox1)
+    metodo_biseccion(f,a,b,prec=4)
+    metodo_regla_falsa(f,a,b,prec=3)
+    metodo_punto_fijo(f,ini,iters)
+    metodo_newton(f,ini,iters)
+    ayuda()
+    """)
 
