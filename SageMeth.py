@@ -552,8 +552,7 @@ def metodo_newton(f,ini,iters):
     Devuelve: aproximaciones mediante el metodo de Newton
     """ 
     
-    N(x) = x - (f(x)/derivative(f,x))
-    metodo_punto_fijo(N,ini,iters)
+    metodo_punto_fijo(x - (f(x)/derivative(f,x)),ini,iters)
 
 
 # In[55]:
