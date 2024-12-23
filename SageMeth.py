@@ -503,9 +503,9 @@ def metodo_biseccion(f,a,b,prec=4):
 # In[21]:
 
 
-def metodo_regla_falsa(f,a,b,prec=3):
+def metodo_regula_falsi(f,a,b,prec=3):
     """
-    Metodo de la regla falsa:
+    Metodo de la regula falsi:
     f: Funcion continua
     a,b: Extremos del intervalo que contiene una raiz
     prec: Precision en digitos decimales del intervalo resultante
