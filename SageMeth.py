@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[66]:
+# In[1]:
 
 
 # SageMeth, funciones de Metodos Algortimicos en Matematicas hechas en SageMath
 # Programa hecho por Jesus Mendoza, Sara Escalada, Ismael Ayuso, Lander Alvarez
 
 
-# In[63]:
+# In[2]:
 
 
 import random
 
 
-# In[64]:
+# In[3]:
 
 
 # Funciones auxiliares, no estan hechas para ser usadas solas, pero pueden
 
 
-# In[1]:
+# In[4]:
 
 
 def tridiagonal(A):
@@ -32,7 +32,7 @@ def tridiagonal(A):
     return A == D
 
 
-# In[2]:
+# In[5]:
 
 
 def copiar_matriz(A):
@@ -46,7 +46,7 @@ def copiar_matriz(A):
     return Ac
 
 
-# In[3]:
+# In[6]:
 
 
 def permutar_filas(A,f1,f2):
@@ -59,7 +59,7 @@ def permutar_filas(A,f1,f2):
     A[f2] = aux
 
 
-# In[4]:
+# In[7]:
 
 
 def pivotaje(A,etapa):
@@ -80,13 +80,13 @@ def pivotaje(A,etapa):
     return bestrow
 
 
-# In[65]:
+# In[8]:
 
 
 # Funciones principales
 
 
-# In[5]:
+# In[9]:
 
 
 def radio_espectral(M):
@@ -101,7 +101,7 @@ def radio_espectral(M):
     return max([abs(x) for x in M.eigenvalues()])
 
 
-# In[67]:
+# In[10]:
 
 
 def metodo_del_remonte(A, b, espacio=RR):
@@ -128,7 +128,7 @@ def metodo_del_remonte(A, b, espacio=RR):
     return u
 
 
-# In[7]:
+# In[11]:
 
 
 def eliminacion_gaussiana(A,b):
@@ -149,7 +149,7 @@ def eliminacion_gaussiana(A,b):
     return A,b
 
 
-# In[8]:
+# In[12]:
 
 
 def fact_doolittle(A,espacio=RR):
@@ -186,7 +186,7 @@ def fact_doolittle(A,espacio=RR):
     return P,L,U
 
 
-# In[9]:
+# In[13]:
 
 
 def fact_crout(A,espacio=RR):
@@ -215,7 +215,7 @@ def fact_crout(A,espacio=RR):
     return P,Lp,Up
 
 
-# In[10]:
+# In[14]:
 
 
 def fact_cholesky(A,espacio=RR):
@@ -243,7 +243,7 @@ def fact_cholesky(A,espacio=RR):
     return P,B,B.T
 
 
-# In[11]:
+# In[15]:
 
 
 def separacion_DEF(A,espacio=QQ):
@@ -277,7 +277,7 @@ def separacion_DEF(A,espacio=QQ):
     
 
 
-# In[12]:
+# In[16]:
 
 
 def jacobi_matriz(A,espacio=QQ):
@@ -291,7 +291,7 @@ def jacobi_matriz(A,espacio=QQ):
     return D.inverse() * (E+F)
 
 
-# In[13]:
+# In[17]:
 
 
 def jacobi_iter(A,b,ini,iters,espacio=QQ):
@@ -333,7 +333,7 @@ def jacobi_iter(A,b,ini,iters,espacio=QQ):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[14]:
+# In[18]:
 
 
 def gauss_seidel_matriz(A,espacio=QQ):
@@ -347,7 +347,7 @@ def gauss_seidel_matriz(A,espacio=QQ):
     return (D-E).inverse() * F
 
 
-# In[15]:
+# In[19]:
 
 
 def gauss_seidel_iter(A,b,ini,iters,espacio=QQ):
@@ -389,7 +389,7 @@ def gauss_seidel_iter(A,b,ini,iters,espacio=QQ):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[16]:
+# In[20]:
 
 
 def sor_matriz(A,w,espacio=QQ):
@@ -404,7 +404,7 @@ def sor_matriz(A,w,espacio=QQ):
     return (w^(-1)*D - E).inverse() * (F + (w^(-1) - 1)*D)
 
 
-# In[17]:
+# In[21]:
 
 
 def sor_iter(A,b,ini,iters,w,espacio=QQ):
@@ -450,7 +450,7 @@ def sor_iter(A,b,ini,iters,w,espacio=QQ):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[18]:
+# In[22]:
 
 
 def parametro_relajacion_optimo(A):
@@ -475,7 +475,7 @@ def parametro_relajacion_optimo(A):
     return 2 / (1 + sqrt(1 - radio_espectral(gauss_seidel_matriz(A))))
 
 
-# In[19]:
+# In[23]:
 
 
 def acotacion_error_matrices_iter(B,TOL,aprox0,aprox1):
@@ -496,7 +496,7 @@ def acotacion_error_matrices_iter(B,TOL,aprox0,aprox1):
     return k
 
 
-# In[20]:
+# In[24]:
 
 
 def metodo_biseccion(f,a,b,prec=4):
@@ -525,7 +525,7 @@ def metodo_biseccion(f,a,b,prec=4):
     return (N(m[-1]),N(n[-1]))
 
 
-# In[21]:
+# In[25]:
 
 
 def metodo_regla_falsa(f,a,b,prec=3):
@@ -549,7 +549,7 @@ def metodo_regla_falsa(f,a,b,prec=3):
     return N(a),N(b)
 
 
-# In[22]:
+# In[26]:
 
 
 def metodo_punto_fijo(f,ini,iters):
@@ -566,7 +566,7 @@ def metodo_punto_fijo(f,ini,iters):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[23]:
+# In[27]:
 
 
 def metodo_newton(f,ini,iters):
@@ -579,11 +579,10 @@ def metodo_newton(f,ini,iters):
     Devuelve: aproximaciones mediante el metodo de Newton
     """ 
     
-    N(x) = x - (f(x)/derivative(f,x))
-    metodo_punto_fijo(N,ini,iters)
+    metodo_punto_fijo(x - (f(x)/derivative(f,x)),ini,iters)
 
 
-# In[59]:
+# In[28]:
 
 
 def ruffini(p,r,verbose=True):
@@ -628,7 +627,7 @@ def ruffini(p,r,verbose=True):
     return res
 
 
-# In[48]:
+# In[29]:
 
 
 def secuencia_sturm(p):
@@ -650,7 +649,7 @@ def secuencia_sturm(p):
     return P
 
 
-# In[49]:
+# In[30]:
 
 
 def N_Sturm(p,a):
@@ -677,7 +676,7 @@ def N_Sturm(p,a):
     return cambios
 
 
-# In[68]:
+# In[31]:
 
 
 def potencia(A,x0 = [0], nmax = 30, displacement = 0, inverse = False , norm = Infinity, verbose = True ) -> float:
@@ -733,7 +732,7 @@ def potencia(A,x0 = [0], nmax = 30, displacement = 0, inverse = False , norm = I
     return res
 
 
-# In[69]:
+# In[32]:
 
 
 def deflacion( A, norm = Infinity ) -> list[float]:
@@ -764,7 +763,7 @@ def deflacion( A, norm = Infinity ) -> list[float]:
     return A-max_vp*Matrix(QQ,len(v1),list(v1))*Matrix(QQ,1,list(v))
 
 
-# In[71]:
+# In[33]:
 
 
 def ayuda():
