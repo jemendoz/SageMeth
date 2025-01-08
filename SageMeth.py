@@ -1,6 +1,25 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[66]:
+
+
+# SageMeth, funciones de Metodos Algortimicos en Matematicas hechas en SageMath
+# Programa hecho por Jesus Mendoza, Sara Escalada, Ismael Ayuso, Lander Alvarez
+
+
+# In[63]:
+
+
+import random
+
+
+# In[64]:
+
+
+# Funciones auxiliares, no estan hechas para ser usadas solas, pero pueden
+
+
 # In[1]:
 
 
@@ -61,6 +80,12 @@ def pivotaje(A,etapa):
     return bestrow
 
 
+# In[65]:
+
+
+# Funciones principales
+
+
 # In[5]:
 
 
@@ -76,7 +101,7 @@ def radio_espectral(M):
     return max([abs(x) for x in M.eigenvalues()])
 
 
-# In[6]:
+# In[67]:
 
 
 def metodo_del_remonte(A, b, espacio=RR):
@@ -86,7 +111,7 @@ def metodo_del_remonte(A, b, espacio=RR):
     b: termino independiente
     espacio: espacio del vector solucion, por defecto R
     
-    Te devuelve el vector solucion de un sistema lineal con matriz del sistema traingular superior.
+    Devuelve: el vector solucion de un sistema lineal con matriz del sistema traingular superior.
     """
     if not A.is_square():
         raise ValueError("La matriz A tiene que ser cuadrada")
@@ -524,7 +549,7 @@ def metodo_regla_falsa(f,a,b,prec=3):
     return N(a),N(b)
 
 
-# In[29]:
+# In[22]:
 
 
 def metodo_punto_fijo(f,ini,iters):
@@ -541,13 +566,15 @@ def metodo_punto_fijo(f,ini,iters):
         print(f"Ciclo {k}: x = {ini}")
 
 
-# In[54]:
+# In[23]:
 
 
 def metodo_newton(f,ini,iters):
     """
     Metodo de Newton
     f: funcion para buscar una raiz
+    ini: valor inicial
+    iters: cantidad de iteraciones a realizar
     
     Devuelve: aproximaciones mediante el metodo de Newton
     """ 
@@ -556,13 +583,194 @@ def metodo_newton(f,ini,iters):
     metodo_punto_fijo(N,ini,iters)
 
 
-# In[55]:
+# In[59]:
+
+
+def ruffini(p,r,verbose=True):
+    """
+    Metodo de Ruffini
+    p: polinomio
+    r: raiz a evaluar
+    verbose: True para que imprima la tablita de Ruffini, False para no imprimirla
+    
+    Devuelve: lista de los valores resultantes de hacer Ruffini
+    """
+    variable = p.variables()[0]
+    espacio = p.base_ring()
+    
+    coefs = []
+    for i in range(int(p.degree(variable)),-1,-1):
+        coefs.append(int(p.coefficients()[i][0]))
+    b = [0] # Fila del medio
+    res = [] # Fila resultado
+    for i,c in enumerate(coefs):
+        res.append(c + b[i])
+        b.append(r*res[i])
+    b.pop() # Hemos calculado un elemento de mas en la fila del medio
+        
+    if verbose:
+        print("  | ",end="")
+        for c in coefs:
+            print(f"{c}",end="\t")
+        print()
+            
+        print(f"  | ",end="")
+        for c in b:
+            print(f"{c}",end="\t")
+        print()
+        
+        print("-"*20)
+            
+        print("  | ",end="")
+        for c in res:
+            print(f"{c}",end="\t")
+    
+    return res
+
+
+# In[48]:
+
+
+def secuencia_sturm(p):
+    """
+    Secuencia de Sturm
+    p: polinomio de una variable
+    
+    Devuelve: La secuencia de Sturm del polinomio
+    """
+    variable = p.variables()[0]
+    P = []
+    P.append(p)
+    P.append(p.derivative(variable))
+    while True:
+        newp = -(P[-2].maxima_methods().divide(P[-1])[1])
+        if newp.leading_coefficient(variable) == 0:
+            break;
+        P.append(newp)
+    return P
+
+
+# In[49]:
+
+
+def N_Sturm(p,a):
+    """
+    Cambios de signo de Sturm
+    p: polinomio de una variable
+    a: punto de evaluacion, puede ser +-Infinity
+    
+    Devuelve: Los cambios de signo de la secuencia de Sturm evaluada en a
+    """
+    sec_sturm = secuencia_sturm(p)
+    if abs(a) == Infinity:
+        evals = [limit(pol,x=a) for pol in sec_sturm]
+    else:
+        evals = [pol(x=a) for pol in sec_sturm]
+        
+    while 0 in evals:
+        evals.remove(0)
+
+    cambios = 0
+    for i in range(0,len(evals)-1):
+        if evals[i]*evals[i+1] < 0:
+            cambios += 1
+    return cambios
+
+
+# In[68]:
+
+
+def potencia(A,x0 = [0], nmax = 30, displacement = 0, inverse = False , norm = Infinity, verbose = True ) -> float:
+    
+    """
+    Metodo de la potencia.
+    A: matriz cuadrada
+    x0: vector inicial de aproximacion, por defecto, generado de forma aleatoria
+    nmax: numero maximo de iteraciones, por defecto es 30
+    displacement: desplazamiento de la matriz, para calcular valores distintos, por defecto es 0
+    inverse: calculo mediante el metodo de la potencia inversa, por defecto es falso
+    norm: norma a la hora de calcular, por defecto es Infinity
+    verbose: indica si se quiere que se muestren los pasos por pantalla
+    
+    Devuelve: el valor propio al que converge el metodo
+    """
+    
+    if not A.is_square():
+        raise ValueError("La matriz no es cuadrada")
+            
+    if sum([0 if x==0 else 1 for x in x0]) == 0:
+        x0 = vector(RR,[random.random() for i in range(A.nrows())])
+        
+    A = A - displacement * identity_matrix(A.nrows())
+    
+    if inverse:
+        try: 
+            A = A.inverse()
+        except:
+            raise Exception("La matriz es singular")
+    v0 = A*x0
+    n_v0 = v0/v0.norm(norm)
+    diff: float = 1
+    n: int = 1
+        
+    while n < nmax:
+        v0 = A*n_v0
+        n_v0= v0/v0.norm(norm)
+        if verbose:
+            print(f"Iteracion {n}:\ny_{n}: {N(v0)}\nz_{n}: {N(n_v0)}\n------------")
+        n+=1
+    
+    v0 = A*n_v0
+    if verbose:
+        print(f"y_{nmax}: {N(v0)}")
+    q = vector(QQ, [v0[i]/n_v0[i] for i in range(A.nrows())])
+    res: float = abs(N(sum(q)/A.nrows()))
+    res += displacement
+    
+    if inverse:
+        res = res^-1
+    
+    return res
+
+
+# In[69]:
+
+
+def deflacion( A, norm = Infinity ) -> list[float]:
+    """
+    Metodo de deflación
+    A: matriz cuadrada, para sustituir el mayor valor propio (en valor absoluto)
+    norm: norma usada en calculos, por defecto es Infinity
+    
+    Devulve: matriz cuadrada con los mismos valores propios que A, pero sustituye el mayor valor propio por 0
+    """
+    max_vp = max([abs(j) for j in A.eigenvalues()])
+    basis=(A-max_vp*identity_matrix(A.nrows())).right_kernel().basis()
+    
+    if len(basis) != 1:
+        raise ValueError("Valor propio no único")
+    
+    v1 = basis[0]
+    not_null_index : int = -1
+    for i in range(len(v1)):
+        if v1[i]!=0:
+            not_null_index = i
+            break
+    else:
+        raise ValueError("Vector propio nulo")
+        
+    v=vector(QQ, A.row(not_null_index))/(max_vp*v1[not_null_index])
+    
+    return A-max_vp*Matrix(QQ,len(v1),list(v1))*Matrix(QQ,1,list(v))
+
+
+# In[71]:
 
 
 def ayuda():
     """
     Funcion de ayuda
-    Para que cojones miras la ayuda de la funcion de ayuda
+    No se porque estas mirando la ayuda de la funcion de ayuda :P
     """
     print("""
     Para obtener informacion sobre una funcion, usa help(<funcion>)
@@ -586,6 +794,11 @@ def ayuda():
     metodo_regla_falsa(f,a,b,prec=3)
     metodo_punto_fijo(f,ini,iters)
     metodo_newton(f,ini,iters)
+    ruffini(p,r,verbose=True)
+    secuencia_sturm(p)
+    N_Sturm(p,a)
+    potencia(A,x0=[0],nmax=30,displacement=0,inverse=False,norm=Infinity,verbose=True)
+    deflacion(A,norm=Infinity)
     ayuda()
     """)
 
